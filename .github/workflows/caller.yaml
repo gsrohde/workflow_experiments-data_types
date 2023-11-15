@@ -1,0 +1,119 @@
+# This workflow calls the R-CMD-check workflow after collecting input
+# from the user (if run manually) and forming the strategy matrix.
+
+name: Caller
+
+on:
+  push:
+  workflow_dispatch:
+    # When running manually, allow users to customize the run:
+    inputs:
+      check-manual:
+        description: 'Check the manual'
+        type: boolean
+        default: true
+
+jobs:
+
+  show-input:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Show Input
+      run: |
+        echo 'check-manual: ${{ inputs.check-manual }}'
+  call-reusable:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ inputs.check-manual }}" # not boolean if not workflow_dispatch event; rather, ''
+  call-reusable-2:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ inputs.check-manual == '' }}"
+  call-reusable-3:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ inputs.check-manual != '' }}"
+  call-reusable-4:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ true || '' }}" # true
+  call-reusable-5:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ '' || true }}" # true
+  call-reusable-6:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ true && '' }}" # not boolean ('')
+  call-reusable-7:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ '' && true }}" # not boolean ('')
+  call-reusable-8:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ false || '' }}" # not boolean ('')
+  call-reusable-9:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ '' || false }}" # false
+  call-reusable-10:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ false && '' }}" # false
+  call-reusable-11:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ '' && false }}" # not boolean ('')
+
+  call-reusable-12:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ true || 'something' }}" # true
+  call-reusable-13:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ 'something' || true }}" # not boolean ('something')
+  call-reusable-14:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ true && 'something' }}" # not boolean ('something')
+  call-reusable-15:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ 'something' && true }}" # true
+  call-reusable-16:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ false || 'something' }}" # not boolean ('something')
+  call-reusable-17:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ 'something' || false }}" # not boolean ('something')
+  call-reusable-18:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ false && 'something' }}" # false
+  call-reusable-19:
+    uses: ./.github/workflows/callee.yaml
+    with:
+      check-manual:
+        "${{ 'something' && false }}" # false

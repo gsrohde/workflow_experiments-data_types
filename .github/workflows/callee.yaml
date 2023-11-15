@@ -1,0 +1,18 @@
+name: Callee
+
+on:
+  workflow_call:
+    inputs:
+      check-manual:
+        type: string
+
+jobs:
+
+  echo-inputs:
+    name: "Echo inputs"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show inputs
+        run: |
+          echo 'check-manual: ${{ inputs.check-manual }}'
+          echo "check-manual == '': ${{ inputs.check-manual == '' }}"
